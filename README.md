@@ -47,4 +47,4 @@ MEmento...codingTEst..OR...
 | ------- | ----------- | ------------------- | ----------- | -------------------------------------------------------------------------- |
 | 프로그래머스  |  Lv.2    | 그리디  | 조이스틱  | [🔗](https://school.programmers.co.kr/learn/courses/30/lessons/42860) |
 | 프로그래머스  | Lv.2    | 그리디 | 큰 수 만들기         | [🔗](https://school.programmers.co.kr/learn/courses/30/lessons/42883) |
-| 백준  | Silver 4    | 그리디            | ATM   | [🔗](https://www.acmicpc.net/problem/11399)                           |
+| 백준  | Silver 4    | 그리디            | ATM   | [🔗](https://www.acmicpc.net/problem/11399)|
