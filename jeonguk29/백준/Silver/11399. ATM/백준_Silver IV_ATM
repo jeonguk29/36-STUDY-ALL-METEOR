@@ -1,0 +1,14 @@
+import Foundation
+
+let n = Int(readLine()!)!
+let m = readLine()!.split(separator: " ").compactMap { Int($0) }.sorted()
+
+var result = 0
+var sum = 0
+
+for time in m {
+    sum += time       // 각 사람까지의 누적 대기 시간
+    result += sum     // 모든 사람의 누적 합
+}
+
+print(result)
