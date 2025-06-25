@@ -1,0 +1,29 @@
+import Foundation
+
+func solution(_ name: String) -> Int {
+    let chars = Array(name)  // 문자열 → 배열로 변환
+    var answer = 0
+
+    // ▲▼ : 각 문자별 최소 조작
+    for char in chars {
+        let up = char.asciiValue! - Character("A").asciiValue!
+        let down = 26 - up
+        answer += Int(min(up, down))
+    }
+
+    // ◀▶ : 커서 이동 최소화
+    var minMove = chars.count - 1
+
+    for i in 0..<chars.count {
+        var next = i + 1
+        // A가 연속된 구간 찾기
+        while next < chars.count && chars[next] == "A" {
+            next += 1
+        }
+        // 이동 거리 계산: 오른쪽 → 왼쪽 되돌아오기 vs 그냥 직진
+        let move = i + (chars.count - next) + min(i, chars.count - next)
+        minMove = min(minMove, move)
+    }
+
+    return answer + minMove
+}
