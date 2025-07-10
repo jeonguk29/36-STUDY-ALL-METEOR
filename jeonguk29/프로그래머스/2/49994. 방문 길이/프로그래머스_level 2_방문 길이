@@ -1,0 +1,43 @@
+from collections import defaultdict
+
+def solution(dirs):
+    answer = 0
+    # U: 위쪽으로 한 칸 가기
+    # D: 아래쪽으로 한 칸 가기
+    # R: 오른쪽으로 한 칸 가기
+    # L: 왼쪽으로 한 칸 가기
+    moves = {
+        'U': [1, 0],
+        'D': [-1, 0],
+        'R': [0, 1],
+        'L': [0, -1]
+    }
+
+    visited = defaultdict(tuple)
+    crntyx = [0, 0] # 시작 좌표 정의
+
+    for dir in dirs:
+        dy, dx = moves[dir]
+        # 들어오는 이동값에 맞춰 이동
+        newy = crntyx[0] + dy
+        newx = crntyx[1] + dx 
+
+        # 넘어가는 경계선 표시
+        if not (-5 <= newy <= 5 and -5 <= newx <= 5):
+            continue
+        
+        # 가본적 없는 곳을 정확하게 파악하려면 from - to, to - from 두개의 좌표를 저장 해야함
+        path1 = (crntyx[0], crntyx[1], newy, newx)
+        path2 = (newy, newx, crntyx[0], crntyx[1])
+
+        # 가본적이 없는 곳이라면?
+        if path1 not in visited.keys() and path2 not in visited.keys():
+            answer += 1
+
+        visited[path1] = 1
+        visited[path2] = 1
+
+        # 현재 위치 이동 위치로 바꿔주기
+        crntyx[0], crntyx[1] = newy, newx
+
+    return answer
