@@ -1,0 +1,16 @@
+def solution(s):
+    stack = []
+
+    for c in s:
+        # 스택이 비어 있지았고 스택에 들어온 값이 스택의 마지막과 같다면 짝임
+        if stack and stack[-1] == c:
+            stack.pop()
+        else:
+            stack.append(c)
+
+    return 1 if not stack else 0
+
+print(solution("baabaa"))
+print(solution("cdcd"))
+
+
