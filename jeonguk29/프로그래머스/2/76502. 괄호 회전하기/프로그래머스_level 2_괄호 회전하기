@@ -1,0 +1,22 @@
+def solution(s):
+    resultCount = 0
+    for i in range(len(s)):
+        rotated = s[i:] + s[:i]  # 문자열 회전
+        stack = []
+        for c in rotated:
+            if c in "([{":
+                stack.append(c)
+            else:
+                if not stack:
+                    break
+                if c == ")" and stack[-1] != "(":
+                    break
+                if c == "]" and stack[-1] != "[":
+                    break
+                if c == "}" and stack[-1] != "{":
+                    break
+                stack.pop()
+        else:
+            if not stack:
+                resultCount += 1
+    return resultCount
