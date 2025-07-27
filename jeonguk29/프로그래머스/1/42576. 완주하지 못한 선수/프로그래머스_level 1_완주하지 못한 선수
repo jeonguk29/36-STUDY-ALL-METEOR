@@ -1,0 +1,15 @@
+def solution(participant, completion):
+    completion_dict = {}
+
+    # 1. completion 이름 개수 세기
+    for name in completion:
+        if name in completion_dict:
+            completion_dict[name] += 1
+        else:
+            completion_dict[name] = 1
+
+    # 2. participant에서 완주 안 한 사람 찾기
+    for name in participant:
+        if name not in completion_dict or completion_dict[name] == 0:
+            return name
+        completion_dict[name] -= 1
