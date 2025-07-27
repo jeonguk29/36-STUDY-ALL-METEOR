@@ -1,0 +1,28 @@
+def solution(want, number, discount):
+    personWantDict = {}
+    result = 0
+
+    # 사용자 원하는 물건과 개수 초기화
+    for i in range(0, len(want)):
+        personWantDict[want[i]] = number[i]
+
+    #print(personWantDict) 
+
+    # 디스카운트 길이만큼 반복을 하는데 총 14개라고 가정했을때
+    for i in range(0, len(discount)):
+        # 0 + i,  10 + 1 이런 수식이면 10개씩 가능 할듯 
+        temp_personWantDict = personWantDict.copy()
+        tempCount = 0 # 10이 되면 빠져나가게
+
+        for j in range(0 + i, 10 + i):
+            if j >= len(discount):  # 범위 넘어가면 break
+                break
+            if tempCount >= 10:
+                break
+            if discount[j] in temp_personWantDict and tempCount < 10: 
+                temp_personWantDict[discount[j]] -= 1
+                tempCount += 1
+        if all(v == 0 for v in temp_personWantDict.values()):
+            result += 1
+
+    return result
