@@ -1,0 +1,26 @@
+def solution(genres, plays):
+    answer = []
+
+    dic1 = {}  # 장르별: [(인덱스, 재생 수)]
+    dic2 = {}  # 장르별: 총 재생 수
+
+    for i, (g, p) in enumerate(zip(genres, plays)):
+        # dic1에 (인덱스, 재생 수) 저장
+        if g not in dic1:
+            dic1[g] = [(i, p)]
+        else:
+            dic1[g].append((i, p))
+
+        # dic2에 장르별 총합 저장
+        if g not in dic2:
+            dic2[g] = p
+        else:
+            dic2[g] += p
+
+    # dic2를 총 재생 수 기준으로 정렬해서 순회
+    for (k, v) in sorted(dic2.items(), key=lambda x:x[1], reverse=True):
+        # dic1에서 해당 장르의 곡들을 재생 수 기준으로 정렬 (내림차순)
+        for (i, p) in sorted(dic1[k], key=lambda x:x[1], reverse=True)[:2]:
+            answer.append(i)
+
+    return answer
