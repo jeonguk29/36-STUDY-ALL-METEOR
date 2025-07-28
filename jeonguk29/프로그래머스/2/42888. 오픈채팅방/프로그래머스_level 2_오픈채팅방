@@ -1,0 +1,24 @@
+def solution(record):
+    recordDic = {}   # uid: nickname
+    result = []
+
+    for i in record:
+        temp = i.split()
+        cmd = temp[0]
+        uid = temp[1]
+
+        if cmd == "Enter":
+            nickname = temp[2]
+            recordDic[uid] = nickname
+            result.append((uid, "님이 들어왔습니다."))
+
+        elif cmd == "Leave":
+            result.append((uid, "님이 나갔습니다."))
+
+        elif cmd == "Change":
+            nickname = temp[2]
+            recordDic[uid] = nickname  # 닉네임만 업데이트
+
+    # 최종 출력 (uid → nickname 치환)
+    answer = [recordDic[uid] + msg for uid, msg in result]
+    return answer
