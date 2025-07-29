@@ -1,0 +1,51 @@
+def solution(id_list, report, k):
+    report = list(set(report))  # ✅ 중복 신고 제거
+    userDit = {}
+    tempUserReportCountDit = {}
+    userReportCountDit = {}
+    resultCountList = []
+
+    #유저, 신고 딕셔너리 초기화
+    for line in report:
+        templist = line.split()
+        #print(templist)
+        if templist[0] not in userDit:
+            userDit[templist[0]] = [templist[1]]  # 리스트로 초기화  list()로 감싸면 안되는지 추후 체크
+        else:
+            userDit[templist[0]].append(templist[1])  # append로 추가
+    #print(userDit)  {'muzi': ['frodo', 'neo'], 'apeach': ['frodo', 'muzi'], 'frodo': ['neo']}
+
+    #정지 사용자 카운트 
+    # k개 이상인것만 userReportCountDit에 최종 남기고 중복 카운트 제거 로직 필요
+    for i in range(0, len(id_list)):
+        if id_list[i] not in userDit:
+            continue # neo는 신고 한적 없어서 키 에러가 남 
+        else:
+            for reportUser in userDit[id_list[i]]: # 각 사용자가 신고한 유저를 카운트, 중복을 제거
+                if reportUser not in tempUserReportCountDit:
+                    tempUserReportCountDit[reportUser] = 1
+                else:
+                    tempUserReportCountDit[reportUser] += 1
+    
+    for i, key in enumerate(tempUserReportCountDit):
+        #print(i, key)
+        if tempUserReportCountDit[key] >= k:
+            userReportCountDit[key] = tempUserReportCountDit[key]
+
+    #print(userReportCountDit) #{'frodo': 2, 'neo': 2}
+
+    # 메일 카운트
+    for user in id_list:
+        count = 0
+        if user not in userDit: # neo key 에러
+            resultCountList.append(count)
+            continue
+        for i in userDit[user]: #각 유저별 신고 사용자 userReportCountDit에서 2개 이상인게 포함되면 카운트(이러면 중복 안됨)
+            if i in userReportCountDit:
+                count += 1
+        resultCountList.append(count)
+
+    return resultCountList
+
+print(solution(["muzi", "frodo", "apeach", "neo"], ["muzi frodo","apeach frodo","frodo neo","muzi neo","apeach muzi"], 2))
+print(solution(["con", "ryan"], ["ryan con", "ryan con", "ryan con", "ryan con"], 3))
