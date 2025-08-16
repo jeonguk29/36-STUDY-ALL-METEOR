@@ -1,48 +1,57 @@
 from collections import deque
 
-D = ((-1, 0), (1,0), (0, -1), (0, 1))
+# 상하좌우 이동 정의
+dx = (-1, 1, 0, 0)
+dy = (0, 0, -1, 1)
 
-def bfs(place, row, col):
-    visited = [[False for _ in range(5)] for _ in range(5)]
+def bfs(place, start_x, start_y):
+    n, m = 5, 5  # 문제에서 고정 크기 5×5
+    visited = [[False] * m for _ in range(n)]
+
     q = deque()
-    visited[row][col] = True
-    q.appendleft((row, col, 0))
+    q.append((start_x, start_y, 0))  # (행, 열, 거리)
+    visited[start_x][start_y] = True
 
-    while len(q):
-        curr = q.pop()
+    while q:
+        x, y, dist = q.popleft()
 
-        if curr[2] > 2:
+        # 거리 2 초과면 더 이상 확인 불필요
+        if dist > 2:
             continue
-        if curr[2] != 0 and place[curr[0]][curr[1]] == 'P':
+
+        # 자기 자신이 아닌 위치에서 'P' 발견 → 거리두기 위반
+        if dist != 0 and place[x][y] == 'P':
             return False
+
+        # 4방향 탐색
         for i in range(4):
-            nr = curr[0] + D[i][0]
-            nc = curr[1] + D[i][1]
-            if nr < 0 or nr > 4 or nc < 0 or nc > 4:
-                continue
-            if visited[nr][nc]:
-                continue
-            if place[nr][nc] == 'X':
-                continue
-            visited[nr][nc] = True
-            q.appendleft((nr, nc, curr[2] + 1))
-    return True
+            nx = x + dx[i]
+            ny = y + dy[i]
+
+            # 범위 체크
+            if 0 <= nx < n and 0 <= ny < m:
+                # 아직 방문 안 했고, 파티션(X)도 아닌 경우만 이동
+                if not visited[nx][ny] and place[nx][ny] != 'X':
+                    visited[nx][ny] = True
+                    q.append((nx, ny, dist + 1))
+
+    return True  # 위반 없음
 
 
 def check(place):
-    for r in range(5):
-        for c in range(5):
-            if place[r][c] == 'P':
-                if bfs(place, r, c) == False:
+    for x in range(5):
+        for y in range(5):
+            if place[x][y] == 'P':  # 사람 발견 시 BFS 검사
+                if not bfs(place, x, y):
                     return False
-    return True # 사람 없거나 체크를 통과 했으면
+    return True
+
 
 def solution(places):
-    answer = []
+    result = []
     for place in places:
         if check(place):
-            answer.append(1)
+            result.append(1)
         else:
-            answer.append(0)
-
-    return answer
+            result.append(0)
+    return result
