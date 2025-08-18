@@ -1,17 +1,19 @@
 def solution(n, computers):
     count = 0
-    visited = set() 
 
+    # 2단계 
     def dfs(node):
-        visited.add(node)
+        computers[node][node] = 0 #나 자신은 0으로 저장
 
-        for nei in range(n):
-            if nei not in visited and computers[node][nei]:
+        for nei in range(n): 
+            if computers[nei][nei] and computers[node][nei]:
                 dfs(nei)
 
+    # 1단계 
     for start in range(n):
-        if start not in visited:
+        if computers[start][start]: # 1일때만 dfs 실행
             dfs(start)
-            count += 1
+            count += 1 # 네트워크 탐색이 끝나면 1증가
 
     return count
+
