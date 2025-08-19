@@ -1,19 +1,21 @@
+from collections import deque
+
 def solution(n, computers):
+    visited = set()
     count = 0
 
-    # 2단계 
-    def dfs(node):
-        computers[node][node] = 0 #나 자신은 0으로 저장
+    def bfs(start):
+        q = deque([start])
+        visited.add(start)
+        while q:
+            node = q.popleft()
+            for nei in range(n):
+                if nei not in visited and computers[node][nei]:
+                    visited.add(nei)
+                    q.append(nei)
 
-        for nei in range(n): 
-            if computers[nei][nei] and computers[node][nei]:
-                dfs(nei)
-
-    # 1단계 
     for start in range(n):
-        if computers[start][start]: # 1일때만 dfs 실행
-            dfs(start)
-            count += 1 # 네트워크 탐색이 끝나면 1증가
-
+        if start not in visited:
+            bfs(start)   # 이 컴포넌트를 전부 방문표시
+            count += 1   # 컴포넌트 1개 카운트
     return count
-
