@@ -1,0 +1,38 @@
+class Node:
+    def __init__(self, parent):
+        self.value = 0 # 파ㄴ매금액
+        self.parent = parent
+
+    def divide(self, money: int):
+        divided_money = money // 10
+        self.value += (money - divided_money) # 분배금을 뺀 나머지가 내 수익
+        if divided_money > 0 and self.parent:
+            self.parent.divide(divided_money) # 부모에게 던지기 => 부모 타고타고 가능 (트리만 구현이 된다면)
+
+
+def solution(enroll, referral, seller, amount):
+    center = Node(None)
+    n = len(enroll)
+    dic = dict()
+    dic.update({"-" : center}) # 부모와 나로 초기화
+
+    # 트리 초기와 이름과 부모가 누구인지 담은 노드 객체를 초기화
+    for i in range(n):
+        person = enroll[i]
+        parent = referral[i]
+        node = Node(dic[parent])
+        dic.update({person: node})
+    
+    m = len(seller) #판매가 이루어진 횟수
+
+    for i in range(m):
+        seller_name = seller[i]
+        price = amount[i] * 100
+        seller_node = dic[seller_name]
+        seller_node.divide(price)
+    
+    answer = []
+    for name in enroll:
+        answer.append(dic[name].value)
+    
+    return answer
