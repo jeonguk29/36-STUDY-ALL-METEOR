@@ -1,0 +1,44 @@
+Node = []
+Graph = [[] for _ in range(17)]
+Visited = []
+MaxS = 0
+
+def dfs(pos, s, w):
+    global Node, Graph, Visited, MaxS
+    if Visited[pos][s][w]:
+        return
+    Visited[pos][s][w] = True
+    backupS = s
+    backupW = w
+    backupNode = Node[pos]
+
+    if Node[pos] == 0:
+        s += 1
+    elif Node[pos] == 1:
+        w += 1
+    Node[pos] = -1
+
+    if w < s:
+        MaxS = max(MaxS, s)
+
+        for next in Graph[pos]:
+            dfs(next, s, w)
+
+    Node[pos] = backupNode
+    Visited[pos][backupS][backupW] = False
+
+def solution(info, edges):
+    global Node, Graph, Visited, MaxS
+    Node = info 
+    for i in range(len(Node)):
+        Graph[i].clear()
+
+    for edge in edges:
+        Graph[edge[0]].append(edge[1])
+        Graph[edge[1]].append(edge[0])
+    
+    Visited = [[[False for _ in range(18)] for _ in range(18)] for _ in range(17)]
+    MaxS = 0
+    dfs(0, 0, 0)
+
+    return MaxS
