@@ -1,0 +1,17 @@
+def solution(people, limit):
+    people.sort()
+    i, j = 0, len(people) - 1
+    count = 0
+    
+    while i <= j:
+        if people[i] + people[j] <= limit:
+            # 가장 가벼운 사람(i) + 가장 무거운 사람(j) 함께 태움
+            i += 1
+        # 무거운 사람(j)은 보트에 태우고 무조건 빠짐
+        j -= 1
+        count += 1
+    
+    return count
+
+print(solution([70, 50, 80, 50], 100))  # 3
+print(solution([70, 80, 50], 100))      # 3
