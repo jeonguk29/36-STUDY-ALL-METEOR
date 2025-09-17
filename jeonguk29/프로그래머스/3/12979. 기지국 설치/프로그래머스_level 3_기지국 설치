@@ -1,0 +1,25 @@
+def solution(n, stations, w):
+    answer = 0
+    cover = 2*w + 1   # 기지국 하나가 덮는 집 개수
+    pos = 1           # 아직 커버되지 않은 시작 위치
+
+    for s in stations:
+        left = (s - w) - pos  # 기지국 왼쪽 빈 구간 길이
+        if left > 0:
+            answer += left // cover
+            if left % cover != 0:   # 나머지가 있으면 +1
+                answer += 1
+        pos = s + w + 1
+
+    # 마지막 기지국 오른쪽 구간
+    if pos <= n:
+        right = (n - pos + 1)
+        answer += right // cover
+        if right % cover != 0:
+            answer += 1
+
+    return answer
+
+
+print(solution(11, [4, 11], 1))  # 3
+print(solution(16, [9], 2))      # 3
