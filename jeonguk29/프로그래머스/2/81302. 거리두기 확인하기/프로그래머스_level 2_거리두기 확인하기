@@ -1,57 +1,64 @@
 from collections import deque
 
-# 상하좌우 이동 정의
-dx = (-1, 1, 0, 0)
-dy = (0, 0, -1, 1)
 
-def bfs(place, start_x, start_y):
-    n, m = 5, 5  # 문제에서 고정 크기 5×5
-    visited = [[False] * m for _ in range(n)]
+# 2단계 bfs 코드
+def bfs(place, row, col):
 
+    ny = (-1, 1, 0, 0)
+    nx = (0, 0, -1, 1)
+
+    visited =[[False] * 5 for _ in range(5)]
     q = deque()
-    q.append((start_x, start_y, 0))  # (행, 열, 거리)
-    visited[start_x][start_y] = True
+    visited[row][col] = True
+    q.appendleft((row, col, 0)) # 시작 거리는 0 자기자신
 
     while q:
-        x, y, dist = q.popleft()
-
-        # 거리 2 초과면 더 이상 확인 불필요
+        y, x, dist = q.popleft()
+				
+		# 거리가 2 초과시 더이상 탐색 필요 x 거리를 지키고 있다는 것임
         if dist > 2:
             continue
-
-        # 자기 자신이 아닌 위치에서 'P' 발견 → 거리두기 위반
-        if dist != 0 and place[x][y] == 'P':
+        # 시작위치가 아니고 다른 응시자를 만나면 (위 조건 때문에 거리가 2 이하이면서)
+        if dist != 0 and place[y][x] == 'P':
             return False
-
-        # 4방향 탐색
+        
+        # 거리 돌면서 (상하좌우)
         for i in range(4):
-            nx = x + dx[i]
-            ny = y + dy[i]
+            nextY = y + ny[i]
+            nextX = x + nx[i]
 
-            # 범위 체크
-            if 0 <= nx < n and 0 <= ny < m:
-                # 아직 방문 안 했고, 파티션(X)도 아닌 경우만 이동
-                if not visited[nx][ny] and place[nx][ny] != 'X':
-                    visited[nx][ny] = True
-                    q.append((nx, ny, dist + 1))
+            # 좌표 벋어나면 skip
+            if nextY < 0 or nextY > 4 or nextX < 0 or nextX > 4:
+                continue
+            # 큐에 넣은적 있다면 skip
+            if visited[nextY][nextX]:
+                continue
+            # 파티션 만나면 이동 못함
+            if place[nextY][nextX] == 'X':
+                continue
+            # 여기까지 오면 이동가능 다음 좌표 큐에 추가
+            visited[nextY][nextX] = True
+            q.append((nextY, nextX, dist + 1))
+            
+    return True # 조건 다 통과시 거리두기 지키거 있어서 True 반환
 
-    return True  # 위반 없음
-
-
+# 1단계 스테이지별 체크 코드
 def check(place):
-    for x in range(5):
-        for y in range(5):
-            if place[x][y] == 'P':  # 사람 발견 시 BFS 검사
-                if not bfs(place, x, y):
+    for r in range(5):
+        for c in range(5):
+            if place[r][c] == 'P': #P를 찾으면 bfs 
+                if bfs(place, r, c) == False: # 응시자 위치 넘기기 다른 응시자 안만나면 True
                     return False
-    return True
-
+    return True # 각 대기실 응시자 없어도 참 반환
 
 def solution(places):
-    result = []
+    answer = []
     for place in places:
         if check(place):
-            result.append(1)
+            answer.append(1)
         else:
-            result.append(0)
-    return result
+            answer.append(0)
+
+    return answer
+
+print(solution([["POOOP", "OXXOX", "OPXPX", "OOXOX", "POXXP"], ["POOPX", "OXPXP", "PXXXO", "OXXXO", "OOOPP"], ["PXOPX", "OXOXP", "OXPOX", "OXXOP", "PXPOX"], ["OOOXX", "XOOOX", "OOOXX", "OXOOX", "OOOOO"], ["PXPXP", "XPXPX", "PXPXP", "XPXPX", "PXPXP"]]))
